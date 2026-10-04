@@ -1,43 +1,68 @@
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
 <head>
+    <meta charset="UTF-8">
     <title>Пользователи</title>
+
     <script>
         function getUserById() {
             const userIdTextBox = document.getElementById('userIdTextBox');
             const userDataContainer = document.getElementById('userDataContainer');
             const id = userIdTextBox.value;
-            //fetch('api/user?id=' + id)
-            fetch('api/user/' + id)
-                .then(response => response.json())
-                .then(user => userDataContainer.innerHTML = JSON.stringify(user));
+
+            fetch('/api/user/' + id)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Пользователь не найден');
+                    }
+                    return response.json();
+                })
+                .then(user => {
+                    userDataContainer.innerHTML = JSON.stringify(user, null, 2);
+                })
+                .catch(error => {
+                    userDataContainer.innerHTML = error.message;
+                });
         }
     </script>
 </head>
 
 <body>
+
 <h4>Получить пользователя по id</h4>
-<input type="text" id = "userIdTextBox" value="3" placeholder="Введите id пользователя">
+
+<input type="text"
+       id="userIdTextBox"
+       value="3"
+       placeholder="Введите id пользователя">
+
 <button onclick="getUserById()">Получить</button>
-<pre id = "userDataContainer"></pre>
+
+<pre id="userDataContainer"></pre>
+
 
 <h4>Случайный пользователь</h4>
-<table style="width: 400px">
+
+<table style="width: 400px" th:if="${randomUser != null}">
     <thead>
-        <tr>
-            <td style="width: 50px">Id</td>
-            <td style="width: 150px">Имя</td>
-            <td style="width: 100px">Логин</td>
-            <td style="width: 100px">Пароль</td>
-        </tr>
+    <tr>
+        <td style="width: 50px">Id</td>
+        <td style="width: 150px">Имя</td>
+        <td style="width: 100px">Логин</td>
+        <td style="width: 100px">Пароль</td>
+    </tr>
     </thead>
+
     <tbody>
-        <tr>
-            <td>${randomUser.id}</td>
-            <td>${randomUser.name}</td>
-            <td>${randomUser.login}</td>
-            <td>${randomUser.password}</td>
-        </tr>
+    <tr>
+        <td th:text="${randomUser.id}"></td>
+        <td th:text="${randomUser.name}"></td>
+        <td th:text="${randomUser.login}"></td>
+        <td th:text="${randomUser.password}"></td>
+    </tr>
     </tbody>
 </table>
+
 </body>
 </html>

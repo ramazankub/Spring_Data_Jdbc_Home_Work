@@ -1,20 +1,29 @@
 package ru.easyum.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+
+@Table("users")
 public class User {
 
-    private final long id;
-    private final String name;
-    private final String login;
-    private final String password;
+    @Id
+    private Long id;
 
-    public User(long id, String name, String login, String password) {
+    private String name;
+    private String login;
+    private String password;
+
+    public User() {
+    }
+
+    public User(Long id, String name, String login, String password) {
         this.id = id;
         this.name = name;
         this.login = login;
         this.password = password;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -29,6 +38,4 @@ public class User {
     public String getPassword() {
         return password;
     }
-
-
 }
